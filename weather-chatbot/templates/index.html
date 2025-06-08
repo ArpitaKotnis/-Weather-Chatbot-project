@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather Chatbot</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; }
+        input, button { padding: 10px; font-size: 16px; }
+        #result { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Weather Chatbot</h1>
+    <form id="weatherForm">
+        <input type="text" name="city" placeholder="Enter city name" required />
+        <button type="submit">Get Weather</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById("weatherForm").onsubmit = async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const response = await fetch("/weather", {
+                method: "POST",
+                body: formData
+            });
+            const data = await response.json();
+            const resultDiv = document.getElementById("result");
+
+            if(data.error){
+                resultDiv.textContent = data.error;
+            } else {
+                resultDiv.innerHTML = `<h3>Weather in ${data.city}</h3>
+                                       <p>Temperature: ${data.temperature} °C</p>
+                                       <p>Description: ${data.description}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
